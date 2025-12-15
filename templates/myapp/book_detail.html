@@ -1,0 +1,28 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<h1>{{ book.title }}</h1>
+<p>Author: {{ book.author }}</p>
+<p>Published: {{ book.published_date }}</p>
+<hr>
+<h2>Comments</h2>
+{% for c in comments %}
+  <div style="border-bottom:1px solid #ddd; padding:6px 0;">
+    <strong>{{ c.user.username }}</strong> <small>{{ c.created_at }}</small>
+    <p>{{ c.content|linebreaks }}</p>
+  </div>
+{% empty %}
+  <p>No comments yet.</p>
+{% endfor %}
+
+{% if user.is_authenticated %}
+  <h3>Leave a comment</h3>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Post comment</button>
+  </form>
+{% else %}
+  <p><a href="{% url 'login' %}?next={{ request.path }}">Log in</a> to leave a comment.</p>
+{% endif %}
+
+{% endblock %}
